@@ -1,0 +1,2 @@
+表结构:
+news(news_id,title,tag,subtitle,publish_date,source_url)

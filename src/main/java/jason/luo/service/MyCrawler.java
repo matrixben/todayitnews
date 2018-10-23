@@ -1,8 +1,9 @@
-package jason.luo.web;
+package jason.luo.service;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import jason.luo.dao.NewsDao;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,8 +13,11 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MyCrawler extends WebCrawler {
+    @Autowired
+    private NewsDao newsDao;
 
 	public boolean shouldVisit(Page refPage, WebURL url) {
 		String urlStr = url.getURL().toLowerCase();
@@ -29,7 +33,7 @@ public class MyCrawler extends WebCrawler {
 			String html = htmlParseData.getHtml();
 			Document doc = Jsoup.parse(html);
 			Elements articles = doc.getElementsByClass("block_m");
-			Map<String, String> titlesMap = new LinkedHashMap<String, String>();
+			Map<String, String> titlesMap = new LinkedHashMap<>();
 			for (Element article : articles) {
 				String title = article.select("h2").text();
 				String subUrl = article.select("h2 > a").attr("href");
@@ -41,6 +45,7 @@ public class MyCrawler extends WebCrawler {
 			for (String t : titlesMap.keySet()) {
 				System.out.println(t + " : " + titlesMap.get(t));
 			}
+//			newsDao.saveNews();
 		}
 	}
 }
