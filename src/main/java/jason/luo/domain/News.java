@@ -1,22 +1,20 @@
 package jason.luo.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class News {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int newsId;
     private String title;
     private String tag;
-    private String subTitle;
     private Date publishDate;
     private String sourceUrl;
-
-    public int getNewsId() {
-        return newsId;
-    }
-
-    public void setNewsId(int newsId) {
-        this.newsId = newsId;
-    }
 
     public String getTitle() {
         return title;
@@ -32,14 +30,6 @@ public class News {
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
     }
 
     public Date getPublishDate() {
