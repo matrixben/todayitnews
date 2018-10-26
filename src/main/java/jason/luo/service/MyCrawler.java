@@ -1,9 +1,9 @@
 package jason.luo.service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Calendar;
+import java.util.Date;
 
-import jason.luo.dao.NewsDaoImpl;
+import jason.luo.domain.News;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,11 +13,13 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class MyCrawler extends WebCrawler {
-    @Autowired
-    private NewsDaoImpl newsDao;
+    private NewsService newsService;
+
+    public MyCrawler(NewsService newsService) {
+        this.newsService = newsService;
+    }
 
     public boolean shouldVisit(Page refPage, WebURL url) {
         String urlStr = url.getURL().toLowerCase();
@@ -25,27 +27,46 @@ public class MyCrawler extends WebCrawler {
     }
 
     public void visit(Page page) {
+        Date today = Calendar.getInstance().getTime();
         String url = page.getWebURL().getURL();
-        System.out.println("URL: " + url);
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();
             Document doc = Jsoup.parse(html);
             Elements articles = doc.getElementsByClass("block_m");
-            Map<String, String> titlesMap = new LinkedHashMap<>();
             for (Element article : articles) {
                 String title = article.select("h2").text();
                 String subUrl = article.select("h2 > a").attr("href");
                 String tag = article.getElementsByClass("icon_float").get(0).child(0).attr("title");
                 String fullUrlStr = url + subUrl.substring(1);
-                titlesMap.put(title + " tag: " + tag, fullUrlStr);
+
+                saveInfo(title, tag, today, fullUrlStr);
             }
 
-            for (String t : titlesMap.keySet()) {
-                System.out.println(t + " : " + titlesMap.get(t));
-            }
-//			newsDao.saveNews();
+
         }
+    }
+
+    private void saveInfo(String title, String tag, Date publishDate, String url){
+        News news = new News();
+        news.setTitle(title);
+        news.setTag(tag);
+        news.setPublishDate(publishDate);
+        news.setSourceUrl(url);
+
+        if (!isNewsExist(news)) {
+            newsService.save(news);
+        }else {
+            System.out.print(news.getTitle().substring(0, 6) + "... is already in.");
+        }
+    }
+
+    private boolean isNewsExist(News news) {
+        News n = newsService.findByTitle(news.getTitle());
+        if (n != null && n.getTitle().equals(news.getTitle())) {
+            return true;
+        }
+        return false;
     }
 }
