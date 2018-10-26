@@ -10,7 +10,7 @@ public class H2CrawlerFactory implements CrawlController.WebCrawlerFactory<MyCra
     }
 
     @Override
-    public MyCrawler newInstance() throws Exception {
+    public MyCrawler newInstance() {
         return new MyCrawler(this.newsService);
     }
 }

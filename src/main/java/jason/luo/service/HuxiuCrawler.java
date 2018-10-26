@@ -1,23 +1,22 @@
 package jason.luo.service;
 
-import java.util.Calendar;
-import java.util.Date;
-
+import edu.uci.ics.crawler4j.crawler.Page;
+import edu.uci.ics.crawler4j.crawler.WebCrawler;
+import edu.uci.ics.crawler4j.parser.HtmlParseData;
+import edu.uci.ics.crawler4j.url.WebURL;
 import jason.luo.domain.News;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.crawler.WebCrawler;
-import edu.uci.ics.crawler4j.parser.HtmlParseData;
-import edu.uci.ics.crawler4j.url.WebURL;
+import java.util.Calendar;
+import java.util.Date;
 
-public class MyCrawler extends WebCrawler {
+public class HuxiuCrawler extends WebCrawler {
     private NewsService newsService;
 
-    public MyCrawler(NewsService newsService) {
+    public HuxiuCrawler(NewsService newsService){
         this.newsService = newsService;
     }
 
@@ -34,14 +33,16 @@ public class MyCrawler extends WebCrawler {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();
             Document doc = Jsoup.parse(html);
-            Elements articles = doc.getElementsByClass("block_m");
+            Elements articles = doc.getElementsByClass("mod-info-flow");  //文章列表
             for (Element article : articles) {
                 String title = article.select("h2").text();
+                //TODO
                 String subUrl = article.select("h2 > a").attr("href");
                 String tag = article.getElementsByClass("icon_float").get(0).child(0).attr("title");
                 String fullUrlStr = url + subUrl.substring(1);
 
-                saveInfo(title, tag, today, fullUrlStr);
+//                saveInfo(title, tag, today, fullUrlStr);
+                System.out.println(title+" , "+tag+" , "+fullUrlStr);
             }
 
 
