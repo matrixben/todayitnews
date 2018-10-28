@@ -2,6 +2,7 @@ package jason.luo.service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import jason.luo.domain.News;
 import org.jsoup.Jsoup;
@@ -63,7 +64,8 @@ public class SolidotCrawler extends WebCrawler {
     }
 
     private boolean isNewsExist(News news) {
-        News n = newsService.findNews(news.getTitle(), "").get(0);
-        return (n != null && n.getTitle().equals(news.getTitle()));
+        List<News> l = newsService.findNews(news.getTitle(), "");
+
+        return (!l.isEmpty() && l.get(0) != null && l.get(0).getTitle().equals(news.getTitle()));
     }
 }

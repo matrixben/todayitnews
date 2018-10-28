@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class IfanrCrawler extends WebCrawler {
     private NewsService newsService;
@@ -40,8 +41,7 @@ public class IfanrCrawler extends WebCrawler {
                 String fullUrlStr = article.select("h3 > a").attr("href");
                 String tag = article.getElementsByClass("article-image").get(0).text();
 
-                // saveInfo(title, tag, today, fullUrlStr);
-                System.out.println(title+" , "+tag+" , "+fullUrlStr);
+                 saveInfo(title, tag, today, fullUrlStr);
             }
 
 
@@ -63,7 +63,8 @@ public class IfanrCrawler extends WebCrawler {
     }
 
     private boolean isNewsExist(News news) {
-        News n = newsService.findNews(news.getTitle(), "").get(0);
-        return (n != null && n.getTitle().equals(news.getTitle()));
+        List<News> l = newsService.findNews(news.getTitle(), "");
+
+        return (!l.isEmpty() && l.get(0) != null && l.get(0).getTitle().equals(news.getTitle()));
     }
 }

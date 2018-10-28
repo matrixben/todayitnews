@@ -16,6 +16,10 @@ public class NewsService {
         return newsDao.findAll();
     }
 
+    public Iterable<News> findLatestTenNews(){
+        return newsDao.findTop10ByOrderByPublishDateDesc();
+    }
+
     public News save(News news){
         return newsDao.save(news);
     }

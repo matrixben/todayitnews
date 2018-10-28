@@ -40,6 +40,14 @@ public class HelloController {
         return newsList;
     }
 
+    @RequestMapping("/tennews")
+    public List<News> findLatestTenNews(){
+        List<News> newsList = new ArrayList<>();
+        Iterable<News> iter = newsService.findLatestTenNews();
+        iter.forEach(i -> {newsList.add(i);});
+        return newsList;
+    }
+
     @RequestMapping("/news")
     public List<News> findNews(@RequestParam(value = "title", defaultValue = "") String title,
                                @RequestParam(value = "tag", defaultValue = "") String tag) {
