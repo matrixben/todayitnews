@@ -13,10 +13,10 @@ import org.jsoup.select.Elements;
 import java.util.Calendar;
 import java.util.Date;
 
-public class HuxiuCrawler extends WebCrawler {
+public class IfanrCrawler extends WebCrawler {
     private NewsService newsService;
 
-    public HuxiuCrawler(NewsService newsService){
+    public IfanrCrawler(NewsService newsService){
         this.newsService = newsService;
     }
 
@@ -33,26 +33,14 @@ public class HuxiuCrawler extends WebCrawler {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();
             Document doc = Jsoup.parse(html);
-            //最热新闻
-//            Element hotest = doc.getElementsByClass("big-pic").first();
-//            String title = hotest.select("h1").text();
-//            String tag
-//            String subUrl = hotest.select("a").attr("href");
-//            String fullUrlStr = url + subUrl.substring(1);
-//            System.out.println(title+" , "+tag+" , "+fullUrlStr);
             //文章列表
-            Elements articles = doc.getElementsByClass("mod-art");
+            Elements articles = doc.getElementsByClass("article-item");
             for (Element article : articles) {
-                String title = article.select("h2").text();
-                String subUrl = article.select("h2 > a").attr("href");
-                Elements tags = article.getElementsByClass("column-link-box");
-                String tag = "虎嗅";  //tag可能为空或有多个
-                if (!"".equals(tags.text().trim())){
-                    tag = tags.get(0).child(0).text();
-                }
-                String fullUrlStr = url + subUrl.substring(1);
+                String title = article.select("h3").text();
+                String fullUrlStr = article.select("h3 > a").attr("href");
+                String tag = article.getElementsByClass("article-image").get(0).text();
 
-//                saveInfo(title, tag, today, fullUrlStr);
+                // saveInfo(title, tag, today, fullUrlStr);
                 System.out.println(title+" , "+tag+" , "+fullUrlStr);
             }
 

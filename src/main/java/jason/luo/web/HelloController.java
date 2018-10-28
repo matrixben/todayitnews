@@ -1,10 +1,7 @@
 package jason.luo.web;
 
 import jason.luo.domain.News;
-import jason.luo.service.H2CrawlerFactory;
-import jason.luo.service.HuxiuCrawler;
-import jason.luo.service.HuxiuCrawlerFactory;
-import jason.luo.service.NewsService;
+import jason.luo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,7 +73,7 @@ public class HelloController {
 
         controller.addSeed("https://www.solidot.org");
         
-        controller.startNonBlocking(new H2CrawlerFactory(newsService), numberOfCrawlers);
+        controller.startNonBlocking(new SolidotCrawlerFactory(newsService), numberOfCrawlers);
 	}
 
 	@RequestMapping("/load")
@@ -96,7 +93,10 @@ public class HelloController {
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
         controller.addSeed("https://www."+ host +".com");
-
-        controller.startNonBlocking(new HuxiuCrawlerFactory(newsService), numberOfCrawlers);
+        if ("ifanr".equals(host)){
+            controller.startNonBlocking(new IfanrCrawlerFactory(newsService), numberOfCrawlers);
+        }else if ("huxiu".equals(host)){
+            controller.startNonBlocking(new HuxiuCrawlerFactory(newsService), numberOfCrawlers);
+        }
     }
 }

@@ -14,10 +14,10 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-public class MyCrawler extends WebCrawler {
+public class SolidotCrawler extends WebCrawler {
     private NewsService newsService;
 
-    public MyCrawler(NewsService newsService) {
+    public SolidotCrawler(NewsService newsService) {
         this.newsService = newsService;
     }
 
