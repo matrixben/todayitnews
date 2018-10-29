@@ -10,9 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class IfanrCrawler extends WebCrawler {
     private NewsService newsService;
@@ -27,23 +25,23 @@ public class IfanrCrawler extends WebCrawler {
     }
 
     public void visit(Page page) {
-        Date today = Calendar.getInstance().getTime();
-        String url = page.getWebURL().getURL();
+        int timeOffset = TimeZone.getTimeZone("Asia/Shanghai").getRawOffset()
+                        - TimeZone.getTimeZone("GMT").getRawOffset();
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();
             Document doc = Jsoup.parse(html);
-            //文章列表
+            //文章列表,从后往前存入数据库以保证时间顺序
             Elements articles = doc.getElementsByClass("article-item");
-            for (Element article : articles) {
-                String title = article.select("h3").text();
-                String fullUrlStr = article.select("h3 > a").attr("href");
-                String tag = article.getElementsByClass("article-image").get(0).text();
+            for (int i = articles.size()-1; i >= 0; i--) {
+                String title = articles.get(i).select("h3").text();
+                String fullUrlStr = articles.get(i).select("h3 > a").attr("href");
+                String tag = articles.get(i).getElementsByClass("article-image").get(0).text();
 
-                 saveInfo(title, tag, today, fullUrlStr);
+                Date today = new Date(new Date().getTime() + timeOffset);
+                saveInfo(title, tag, today, fullUrlStr);
             }
-
 
         }
     }

@@ -3,6 +3,7 @@ package jason.luo.service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import jason.luo.domain.News;
 import org.jsoup.Jsoup;
@@ -28,7 +29,8 @@ public class SolidotCrawler extends WebCrawler {
     }
 
     public void visit(Page page) {
-        Date today = Calendar.getInstance().getTime();
+        int timeOffset = TimeZone.getTimeZone("Asia/Shanghai").getRawOffset()
+                - TimeZone.getTimeZone("GMT").getRawOffset();
         String url = page.getWebURL().getURL();
 
         if (page.getParseData() instanceof HtmlParseData) {
@@ -36,15 +38,15 @@ public class SolidotCrawler extends WebCrawler {
             String html = htmlParseData.getHtml();
             Document doc = Jsoup.parse(html);
             Elements articles = doc.getElementsByClass("block_m");
-            for (Element article : articles) {
-                String title = article.select("h2").text();
-                String subUrl = article.select("h2 > a").attr("href");
-                String tag = article.getElementsByClass("icon_float").get(0).child(0).attr("title");
+            for (int i = articles.size()-1; i >= 0; i--) {
+                String title = articles.get(i).select("h2").text();
+                String subUrl = articles.get(i).select("h2 > a").attr("href");
+                String tag = articles.get(i).getElementsByClass("icon_float").get(0).child(0).attr("title");
                 String fullUrlStr = url + subUrl.substring(1);
 
+                Date today = new Date(new Date().getTime() + timeOffset);
                 saveInfo(title, tag, today, fullUrlStr);
             }
-
 
         }
     }

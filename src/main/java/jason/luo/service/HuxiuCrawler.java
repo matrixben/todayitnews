@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class HuxiuCrawler extends WebCrawler {
     private NewsService newsService;
@@ -27,7 +28,8 @@ public class HuxiuCrawler extends WebCrawler {
     }
 
     public void visit(Page page) {
-        Date today = Calendar.getInstance().getTime();
+        int timeOffset = TimeZone.getTimeZone("Asia/Shanghai").getRawOffset()
+                - TimeZone.getTimeZone("GMT").getRawOffset();
         String url = page.getWebURL().getURL();
 
         if (page.getParseData() instanceof HtmlParseData) {
@@ -43,16 +45,17 @@ public class HuxiuCrawler extends WebCrawler {
 //            System.out.println(title+" , "+tag+" , "+fullUrlStr);
             //文章列表
             Elements articles = doc.getElementsByClass("mod-art");
-            for (Element article : articles) {
-                String title = article.select("h2").text();
-                String subUrl = article.select("h2 > a").attr("href");
-                Elements tags = article.getElementsByClass("column-link-box");
+            for (int i = articles.size()-1; i >= 0; i--) {
+                String title = articles.get(i).select("h2").text();
+                String subUrl = articles.get(i).select("h2 > a").attr("href");
+                Elements tags = articles.get(i).getElementsByClass("column-link-box");
                 String tag = "虎嗅";  //tag可能为空或有多个
                 if (!"".equals(tags.text().trim())){
                     tag = tags.get(0).child(0).text();
                 }
                 String fullUrlStr = url + subUrl.substring(1);
 
+                Date today = new Date(new Date().getTime() + timeOffset);
                 saveInfo(title, tag, today, fullUrlStr);
             }
 
