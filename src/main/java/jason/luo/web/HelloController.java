@@ -1,10 +1,12 @@
 package jason.luo.web;
 
+import jason.luo.domain.Greeting;
+import jason.luo.domain.HelloMessage;
 import jason.luo.domain.News;
 import jason.luo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.Schedules;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,7 @@ import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,13 @@ public class HelloController {
     public String hello(){
         return "This project is going to gather all IT news' title and url " +
                 "to one page for me to view.";
+    }
+
+    @MessageMapping("/hello")
+    @SendTo("/topic/greetings")
+    public Greeting greeting(HelloMessage message) throws InterruptedException {
+        Thread.sleep(1000);
+        return new Greeting("Hello " + HtmlUtils.htmlEscape(message.getName()) + " !");
     }
 
     @RequestMapping("/count")

@@ -2,6 +2,12 @@
 news(news_id,title,tag,subtitle,publish_date,source_url)
 
 先使用spring单体应用构建，后期再把爬虫和定时任务提取出来用其他方式实现
+celery;消息队列
 
 超媒体:
 HAL: spring HATEOS
+
+websocket in spring: https://spring.io/guides/gs/messaging-stomp-websocket/
+前端模板 thymeleaf: https://spring.io/guides/gs/serving-web-content/
+
+stomp
