@@ -1,50 +1,35 @@
-var stompClient = null;
+function showGreeting(tennews) {
+    $.each(tennews, function(i, onenews){
+        var tbody = $('#latestnews');
+        var tr = $('<tr></tr>');
+        var tdTitle = $('<td></td>');
+        var aTitle = $('<a></a>');
+        var tdTag = $('<td></td>');
+        aTitle.text(onenews.title);
+        aTitle.attr("href", onenews.sourceUrl).attr("target", "_blank");
+        tdTag.text(onenews.tag);
 
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
-
-function connect() {
-    var socket = new SockJS('/gs-jason-websocket');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        });
+        tdTitle.append(aTitle);
+        tr.append(tdTitle);
+        tr.append(tdTag);
+        tbody.append(tr);
     });
-}
 
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
+    for (var i=0; i<message.length; i++){
+        $("#greetings").append("<tr><td>" +
+        "<a href='"+message[i].sourceUrl+"'>"+message[i].title+"</a>"
+         + "</td></tr>");
     }
-    setConnected(false);
-    console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
+$(document).ready(function(){
+    function addLatestNews(tennews){
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
-}
+    }
 
-$(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $.getJSON("/thirtynews",
+        function(data){
+            showGreeting(data);
+        }
+    );
 });

@@ -11,7 +11,7 @@ public interface NewsDao extends CrudRepository<News, Integer>{
 
     List<News> findNewsByTitleLikeOrTagOrderByPublishDateDesc(String title, String tag);
 
-    List<News> findTop10ByOrderByPublishDateDesc();
+    List<News> findTop30ByOrderByPublishDateDesc();
 
     long removeByTitle(String title);
 }

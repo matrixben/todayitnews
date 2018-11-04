@@ -16,8 +16,8 @@ public class NewsService {
         return newsDao.findAll();
     }
 
-    public Iterable<News> findLatestTenNews(){
-        return newsDao.findTop10ByOrderByPublishDateDesc();
+    public Iterable<News> findLatestThirtyNews(){
+        return newsDao.findTop30ByOrderByPublishDateDesc();
     }
 
     public News save(News news){
@@ -26,7 +26,7 @@ public class NewsService {
 
     public List<News> findNews(String title, String tag){
         if (!"".equals(title) && !"".equals(tag)){
-            return newsDao.findNewsByTitleLikeAndTagOrderByPublishDateDesc("%"+title+"%", tag);
+            return newsDao.findNewsByTitleLikeAndTagOrderByPublishDateDesc("%"+title+"%", tag); //模糊查询
         }
         return newsDao.findNewsByTitleLikeOrTagOrderByPublishDateDesc("%"+title+"%", tag);
     }

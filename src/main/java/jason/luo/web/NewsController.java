@@ -1,12 +1,12 @@
 package jason.luo.web;
 
-import jason.luo.domain.Greeting;
-import jason.luo.domain.HelloMessage;
 import jason.luo.domain.News;
 import jason.luo.service.*;
+import jason.luo.service.crawlers.HuxiuCrawlerFactory;
+import jason.luo.service.crawlers.IfanrCrawlerFactory;
+import jason.luo.service.crawlers.SolidotCrawlerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,13 +16,12 @@ import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class HelloController {
+public class NewsController {
     @Autowired
     private NewsService newsService;
 
@@ -30,13 +29,6 @@ public class HelloController {
     public String hello(){
         return "This project is going to gather all IT news' title and url " +
                 "to one page for me to view.";
-    }
-
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
-    public Greeting greeting(HelloMessage message) throws InterruptedException {
-        Thread.sleep(1000);
-        return new Greeting("Hello " + HtmlUtils.htmlEscape(message.getName()) + " !");
     }
 
     @RequestMapping("/count")
@@ -48,15 +40,20 @@ public class HelloController {
     public List<News> findAllNews(){
         List<News> newsList = new ArrayList<>();
         Iterable<News> iter = newsService.findAll();
-        iter.forEach(i -> {newsList.add(i);});
+        for (News news : iter) {
+            newsList.add(news);
+        }
         return newsList;
     }
 
-    @RequestMapping("/tennews")
-    public List<News> findLatestTenNews(){
+    /**
+     * GetMapping相当于RequestMapping(method="GET")
+     */
+    @GetMapping("/thirtynews")
+    public List<News> findLatestThirtyNews(){
         List<News> newsList = new ArrayList<>();
-        Iterable<News> iter = newsService.findLatestTenNews();
-        iter.forEach(i -> {newsList.add(i);});
+        Iterable<News> iter = newsService.findLatestThirtyNews();
+        iter.forEach(newsList::add);
         return newsList;
     }
 

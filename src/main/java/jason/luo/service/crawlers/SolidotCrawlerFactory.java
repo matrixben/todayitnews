@@ -1,6 +1,7 @@
-package jason.luo.service;
+package jason.luo.service.crawlers;
 
 import edu.uci.ics.crawler4j.crawler.CrawlController;
+import jason.luo.service.NewsService;
 
 public class SolidotCrawlerFactory implements CrawlController.WebCrawlerFactory<SolidotCrawler> {
     private NewsService newsService;

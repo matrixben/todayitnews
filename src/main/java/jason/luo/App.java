@@ -5,8 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * Hello world!
- *
+ * IT News crawl and display.
  */
 @SpringBootApplication
 @EnableScheduling
