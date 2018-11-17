@@ -20,10 +20,6 @@ public class NewsService {
         return newsDao.findTop30ByOrderByPublishDateDesc();
     }
 
-    public News save(News news){
-        return newsDao.save(news);
-    }
-
     public List<News> findNews(String title, String tag){
         if (!"".equals(title) && !"".equals(tag)){
             return newsDao.findNewsByTitleLikeAndTagOrderByPublishDateDesc("%"+title+"%", tag); //模糊查询

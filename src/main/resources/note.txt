@@ -14,3 +14,4 @@ stomp
 
 TODO: 抽出一个baseCrawler类
 处理scheduledCrawler的异常
+将crawler功能拿出来作为单独的spring项目，新建一个repo
