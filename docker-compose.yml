@@ -1,0 +1,17 @@
+todayitnews:
+  image: matrixben/todayitnews:0.0.1
+  ports:
+    - '8080:8080'
+  links:
+    - postgres
+
+postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: sampledb
+      POSTGRES_USER: jason
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./db/postgres/init:/docker-entrypoint-initdb.d/
+      - ./db/postgres/init/my-postgres.conf:/etc/postgresql/postgresql.conf

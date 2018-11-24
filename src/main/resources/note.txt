@@ -15,3 +15,6 @@ stomp
 TODO: 抽出一个baseCrawler类
 处理scheduledCrawler的异常
 将crawler功能拿出来作为单独的spring项目，新建一个repo
+服务器先cd /home/jason/spring_project
+再启动postgres数据库容器实例
+docker run -d --name some-postgres -e POSTGRES_DB=sampledb -e POSTGRES_USER=jason -e POSTGRES_PASSWORD=123456 -v "$PWD/create_table.sql":/docker-entrypoint-initdb.d/create_table.sql -v "$PWD/my-postgres.conf":/etc/postgresql/postgresql.conf postgres -c 'config_file=/etc/postgresql/postgresql.conf'
